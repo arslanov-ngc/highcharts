@@ -14,8 +14,10 @@ if (typeof Highcharts === 'object') {
 const OrgChart = () => {
   const options: Options = {
     chart: {
-      height: 600,
+      type: 'organization',
+      height: 1000,
       inverted: true,
+      spacing: [20, 20, 20, 20],
     },
     title: {
       text: 'Raqamli texnologiyalar vazirligi markaziy apparatining tuzilmasi',
@@ -137,46 +139,39 @@ const OrgChart = () => {
             from: "Vazirning birinchi o'rinbosari",
             to: "Sun'iy intellekt texnologiyalarini joriy qilish va rivojlantirish bo'limi",
           },
-        ],
-        levels: [
+          // -------------------------------------------------
           {
-            level: 0,
-            color: '#fff',
-            borderColor: '#375289',
-            borderWidth: 2,
+            from: 'vazir',
+            to: "Vazir o'rinbosari",
           },
           {
-            level: 1,
-            color: '#fff',
-            borderColor: '#375289',
-            borderWidth: 2,
+            from: "Vazir o'rinbosari",
+            to: 'Telekommunikatsiya infratuzilmasini rivojlantirish boshqarmasi',
           },
           {
-            level: 2,
-            color: '#fff',
-            borderColor: '#aaa',
-            dataLabels: {
-              style: {
-                color: '#333',
-              },
-            },
+            from: 'Telekommunikatsiya infratuzilmasini rivojlantirish boshqarmasi',
+            to: "Mobil a'loqa va teleradioeshittirish tarmoqlari bo'limi",
           },
           {
-            level: 3,
-            color: '#fff',
-            borderColor: '#aaa',
-            dataLabels: {
-              style: {
-                color: '#666',
-              },
-            },
+            from: 'Telekommunikatsiya infratuzilmasini rivojlantirish boshqarmasi',
+            to: "Kommutatsiya va uzatish tarmoqlari bo'limi",
+          },
+          {
+            from: "Vazir o'rinbosari",
+            to: "Hududiy bo'linmalar faoliyatini muvofiqlashtirish bo'limi",
+          },
+          {
+            from: "Hududiy bo'linmalar faoliyatini muvofiqlashtirish bo'limi",
+            to: "Hududiy bo'linmalar",
           },
         ],
         nodes: [
           {
             id: 'vazir',
-            name: 'Sh.Shermatov',
-            title: 'Vazir',
+            name: '<a href="https://google.com">Vazir <br/> Sh.Shermatov</a>',
+            dataLabels: {
+              useHTML: true,
+            },
           },
           {
             id: "Vazir kotibiyati boshlig'i",
@@ -248,6 +243,63 @@ const OrgChart = () => {
             name: "Sun'iy intellekt texnologiyalarini joriy qilish va rivojlantirish bo'limi",
             column: 4,
           },
+          {
+            id: "Vazir o'rinbosari",
+            column: 6,
+          },
+          {
+            id: 'Telekommunikatsiya infratuzilmasini rivojlantirish boshqarmasi',
+            column: 6,
+          },
+          {
+            id: "Hududiy bo'linmalar faoliyatini muvofiqlashtirish bo'limi",
+            column: 6,
+          },
+        ],
+        levels: [
+          {
+            level: 0,
+            color: '#375289',
+            borderColor: '#375289',
+            borderWidth: 2,
+            dataLabels: {
+              style: {
+                color: '#fff',
+              },
+            },
+          },
+          {
+            level: 1,
+            color: '#375289',
+            borderColor: '#375289',
+            borderWidth: 2,
+            dataLabels: {
+              style: {
+                color: '#fff',
+              },
+            },
+          },
+          {
+            level: 2,
+            color: '#fff',
+            borderColor: '#375289',
+            borderWidth: 2,
+            dataLabels: {
+              style: {
+                color: '#333',
+              },
+            },
+          },
+          {
+            level: 3,
+            color: '#fff',
+            borderColor: '#aaa',
+            dataLabels: {
+              style: {
+                color: '#666',
+              },
+            },
+          },
         ],
         colorByPoint: false,
         borderRadius: 0,
@@ -257,7 +309,7 @@ const OrgChart = () => {
   };
 
   return (
-    <div>
+    <div className="org-chart-wrapper">
       <HighchartsReact highcharts={Highcharts} options={options} />
     </div>
   );
