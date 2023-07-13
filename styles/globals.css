@@ -11,6 +11,7 @@
 #highcharts-container {
   min-width: 300px;
   overflow-x: scroll !important;
+  transform: scale(0.5);
 }
 
 #highcharts-container div {
