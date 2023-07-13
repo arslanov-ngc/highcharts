@@ -3,6 +3,7 @@ import HighchartsReact from 'highcharts-react-official';
 import HighchartsSankey from 'highcharts/modules/sankey';
 import HighchartsOrganization from 'highcharts/modules/organization';
 import { useEffect, useState } from 'react';
+import Draggable from 'react-draggable';
 
 if (typeof Highcharts === 'object') {
   HighchartsSankey(Highcharts);
@@ -83,28 +84,11 @@ const OrganizationChart = ({ data }: Props) => {
 
   const options: Options = {
     chart: {
-      // zooming: {
-      //   type: 'xy',
-      //   pinchType: 'xy',
-      //   // mouseWheel: false,
-      //   // singleTouch: true,
-      // },
       type: 'organization',
-      panning: {
-        enabled: true,
-      },
-      panKey: 'shift',
       // inverted: true,
       spacing: [20, 20, 20, 20],
       width: (Object.keys(levels).length + 1) * width * Object.keys(levels).length,
       height: `${maxCount * 120}px`,
-    },
-    xAxis: {
-      panningEnabled: true,
-    },
-    yAxis: {
-      enabled: true,
-      panningEnabled: true,
     },
     title: {
       text: '',
@@ -207,8 +191,12 @@ const OrganizationChart = ({ data }: Props) => {
   };
 
   return (
-    <div className="organization-chart">
-      <HighchartsReact containerProps={{ id: 'highcharts-container' }} highcharts={Highcharts} options={options} />
+    <div className="chart-container">
+      <Draggable>
+        <div className="organization-chart">
+          <HighchartsReact containerProps={{ id: 'highcharts-container' }} highcharts={Highcharts} options={options} />
+        </div>
+      </Draggable>
     </div>
   );
 };
