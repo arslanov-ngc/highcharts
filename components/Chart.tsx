@@ -81,13 +81,20 @@ const OrganizationChart = ({ data }: Props) => {
     return () => document.removeEventListener('resize', getWidth);
   }, []);
 
-  const options: any = {
+  const options: Options = {
     chart: {
       type: 'organization',
       // inverted: true,
       spacing: [20, 20, 20, 20],
       width: (Object.keys(levels).length + 1) * width * Object.keys(levels).length,
       height: `${maxCount * 120}px`,
+      panning: {
+        enabled: true,
+        type: 'x',
+      },
+    },
+    xAxis: {
+      max: 6,
     },
     title: {
       text: '',
@@ -102,6 +109,7 @@ const OrganizationChart = ({ data }: Props) => {
     // },
     tooltip: {
       enabled: false,
+      followTouchMove: false,
     },
     exporting: {
       allowHTML: true,
@@ -123,6 +131,7 @@ const OrganizationChart = ({ data }: Props) => {
             },
           },
         },
+        // @ts-ignore
         data: modifiedData,
         nodes: dataNodes,
         levels: [
