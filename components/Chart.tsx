@@ -83,6 +83,12 @@ const OrganizationChart = ({ data }: Props) => {
 
   const options: Options = {
     chart: {
+      zooming: {
+        type: 'xy',
+        pinchType: 'xy',
+        // mouseWheel: false,
+        singleTouch: true,
+      },
       type: 'organization',
       // inverted: true,
       spacing: [20, 20, 20, 20],
@@ -101,8 +107,7 @@ const OrganizationChart = ({ data }: Props) => {
     //   },
     // },
     tooltip: {
-      // enabled: false,
-      followTouchMove: false,
+      enabled: false,
     },
     exporting: {
       allowHTML: true,
