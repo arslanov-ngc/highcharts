@@ -108,8 +108,8 @@ const OrganizationChart = ({ data }: Props) => {
     //   },
     // },
     tooltip: {
-      enabled: false,
-      followTouchMove: false,
+      // enabled: false,
+      followTouchMove: true
     },
     exporting: {
       allowHTML: true,
