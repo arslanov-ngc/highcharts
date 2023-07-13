@@ -1,43 +1,114 @@
-import React from 'react';
 import Highcharts, { Options } from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import HighchartsSankey from 'highcharts/modules/sankey';
 import HighchartsOrganization from 'highcharts/modules/organization';
-
-// Initialize the 'organization' module
+import { useEffect, useState } from 'react';
 
 if (typeof Highcharts === 'object') {
   HighchartsSankey(Highcharts);
   HighchartsOrganization(Highcharts);
 }
 
-const OrgChart = () => {
-  const options: Options = {
+type Structure = {
+  id: number;
+  title: string;
+  parent_id?: number;
+  guide_id: number;
+  level: number;
+  children: Structure[];
+};
+
+type Props = {
+  data: Structure[];
+};
+
+const OrganizationChart = ({ data }: Props) => {
+  const [maxCount, setMaxCount] = useState(0);
+  const [width, setWidth] = useState(75);
+
+  const modifiedData = data
+    .filter((item) => item?.parent_id)
+    .map((item) => {
+      return { from: item?.parent_id && item?.parent_id.toString(), to: item?.id.toString() };
+    });
+
+  const dataNodes = data.map((item) => {
+    return {
+      id: item?.id.toString(),
+      name: item?.title,
+      // column: item?.level,
+      dataLabels: {
+        useHTML: true,
+      },
+    };
+  });
+
+  const levels = data.reduce((acc: any, current: any) => {
+    const { level } = current;
+    acc[level] = (acc[level] || 0) + 1;
+    return acc;
+  }, {});
+
+  for (const level in levels) {
+    if (levels[level] > maxCount) {
+      setMaxCount(() => levels[level]);
+    }
+  }
+
+  function call(id: string) {
+    alert(id);
+  }
+
+  function getWidth() {
+    const windowWidth = document.documentElement.clientWidth;
+
+    if (windowWidth < 1300) {
+      setWidth(() => 50);
+    } else if (windowWidth < 1400) {
+      setWidth(() => 50);
+    } else if (windowWidth < 1600) {
+      setWidth(() => 60);
+    } else {
+      setWidth(() => 75);
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('resize', getWidth);
+
+    getWidth();
+
+    return () => document.removeEventListener('resize', getWidth);
+  }, []);
+
+  const options: any = {
     chart: {
       type: 'organization',
-      height: 1000,
-      inverted: true,
+      // inverted: true,
       spacing: [20, 20, 20, 20],
+      width: (Object.keys(levels).length + 1) * width * Object.keys(levels).length,
+      height: `${maxCount * 120}px`,
     },
     title: {
-      text: 'Raqamli texnologiyalar vazirligi markaziy apparatining tuzilmasi',
+      text: '',
     },
-    accessibility: {
-      point: {
-        descriptionFormat:
-          '{add index 1}. {toNode.name}' +
-          '{#if (ne toNode.name toNode.id)}, {toNode.id}{/if}, ' +
-          'reports to {fromNode.id}',
-      },
-    },
+    // accessibility: {
+    //   point: {
+    //     descriptionFormat:
+    //       '{add index 1}. {toNode.name}' +
+    //       '{#if (ne toNode.name toNode.id)}, {toNode.id}{/if}, ' +
+    //       'reports to {fromNode.id}',
+    //   },
+    // },
     tooltip: {
       enabled: false,
     },
     exporting: {
       allowHTML: true,
-      sourceWidth: 800,
-      sourceHeight: 600,
+      // sourceWidth: 800,
+      // sourceHeight: 1000,
     },
+
     series: [
       {
         type: 'organization',
@@ -47,215 +118,12 @@ const OrgChart = () => {
         point: {
           events: {
             click: function () {
-              // location.href = this?.options?.custom?.src;
-              console.log(this.options);
+              call(this.options.id as string);
             },
           },
         },
-        data: [
-          {
-            from: 'vazir',
-            to: 'Strategik rivojlantirish boshqarmasi',
-          },
-          {
-            from: 'vazir',
-            to: "Inson resurslarini rivojlantirish va boshqarish bo'limi",
-          },
-          {
-            from: 'vazir',
-            to: "Ichki audit va korrupsiyaga qarshi kurashish bo'limi",
-          },
-          {
-            from: 'vazir',
-            to: 'Axborot xizmati',
-          },
-          {
-            from: 'vazir',
-            to: 'Vazir yordamchisi',
-          },
-          {
-            from: 'vazir',
-            to: 'Iqtisodiyot boshqarmasi',
-          },
-          {
-            from: 'vazir',
-            to: "Buxgalteriya hisobi bo'limi",
-          },
-          {
-            from: 'vazir',
-            to: "Vazir kotibiyati boshlig'i",
-          },
-          {
-            from: 'vazir',
-            to: "Vazirning birinchi o'rinbosari",
-          },
-          // -------------------------------
-          {
-            from: "Vazir kotibiyati boshlig'i",
-            to: 'Axborot-tahlil va ijro intizomi boshqarmasi',
-          },
-          {
-            from: 'Axborot-tahlil va ijro intizomi boshqarmasi',
-            to: "Nazorat va ijro intizomi bo'limi",
-          },
-          {
-            from: 'Axborot-tahlil va ijro intizomi boshqarmasi',
-            to: "Murojaatlar bo'limi",
-          },
-          {
-            from: 'Axborot-tahlil va ijro intizomi boshqarmasi',
-            to: "Yuridik ta'minlash bo'limi",
-          },
-          {
-            from: "Vazir kotibiyati boshlig'i",
-            to: "Xalqaro hamkorlik bo'limi",
-          },
-          // -------------------------------------------
-          {
-            from: "Vazirning birinchi o'rinbosari",
-            to: 'Elektron hukumat tizimini rivojlantirish boshqarmasi',
-          },
-          {
-            from: 'Elektron hukumat tizimini rivojlantirish boshqarmasi',
-            to: "Davlat organlarini raqamlashtirish bo'limi",
-          },
-          {
-            from: 'Elektron hukumat tizimini rivojlantirish boshqarmasi',
-            to: "Elektron davlat xizmatlarini joriy etish va idoralararo elektron hamkorlik bo'limi",
-          },
-          {
-            from: "Vazirning birinchi o'rinbosari",
-            to: 'Raqamli iqtisodiyotni rivojlantirish boshqarmasi',
-          },
-          {
-            from: 'Raqamli iqtisodiyotni rivojlantirish boshqarmasi',
-            to: "Iqtisodiyot tarmoqlarini raqamlashtirish bo'limi",
-          },
-          {
-            from: 'Raqamli iqtisodiyotni rivojlantirish boshqarmasi',
-            to: "Raqamli industriya va IT-eksportni rivojlantirish bo'limi",
-          },
-          {
-            from: "Vazirning birinchi o'rinbosari",
-            to: "Sun'iy intellekt texnologiyalarini joriy qilish va rivojlantirish bo'limi",
-          },
-          // -------------------------------------------------
-          {
-            from: 'vazir',
-            to: "Vazir o'rinbosari",
-          },
-          {
-            from: "Vazir o'rinbosari",
-            to: 'Telekommunikatsiya infratuzilmasini rivojlantirish boshqarmasi',
-          },
-          {
-            from: 'Telekommunikatsiya infratuzilmasini rivojlantirish boshqarmasi',
-            to: "Mobil a'loqa va teleradioeshittirish tarmoqlari bo'limi",
-          },
-          {
-            from: 'Telekommunikatsiya infratuzilmasini rivojlantirish boshqarmasi',
-            to: "Kommutatsiya va uzatish tarmoqlari bo'limi",
-          },
-          {
-            from: "Vazir o'rinbosari",
-            to: "Hududiy bo'linmalar faoliyatini muvofiqlashtirish bo'limi",
-          },
-          {
-            from: "Hududiy bo'linmalar faoliyatini muvofiqlashtirish bo'limi",
-            to: "Hududiy bo'linmalar",
-          },
-        ],
-        nodes: [
-          {
-            id: 'vazir',
-            name: '<a href="https://google.com">Vazir <br/> Sh.Shermatov</a>',
-            dataLabels: {
-              useHTML: true,
-            },
-          },
-          {
-            id: "Vazir kotibiyati boshlig'i",
-            name: "Vazir kotibiyati boshlig'i",
-            column: 2,
-          },
-          {
-            id: 'Axborot-tahlil va ijro intizomi boshqarmasi',
-            name: 'Axborot-tahlil va ijro intizomi boshqarmasi',
-            column: 2,
-          },
-          {
-            id: "Nazorat va ijro intizomi bo'limi",
-            name: "Nazorat va ijro intizomi bo'limi",
-            column: 3,
-          },
-          {
-            id: "Murojaatlar bo'limi",
-            name: "Murojaatlar bo'limi",
-            column: 3,
-          },
-          {
-            id: "Yuridik ta'minlash bo'limi",
-            name: "Yuridik ta'minlash bo'limi",
-            column: 3,
-          },
-          {
-            id: "Xalqaro hamkorlik bo'limi",
-            name: "Xalqaro hamkorlik bo'limi",
-            column: 2,
-          },
-          {
-            id: "Vazirning birinchi o'rinbosari",
-            name: "Vazirning birinchi o'rinbosari",
-            column: 4,
-          },
-          {
-            id: 'Elektron hukumat tizimini rivojlantirish boshqarmasi',
-            name: 'Elektron hukumat tizimini rivojlantirish boshqarmasi',
-            column: 4,
-          },
-          {
-            id: "Davlat organlarini raqamlashtirish bo'limi",
-            name: "Davlat organlarini raqamlashtirish bo'limi",
-            column: 5,
-          },
-          {
-            id: "Elektron davlat xizmatlarini joriy etish va idoralararo elektron hamkorlik bo'limi",
-            name: "Elektron davlat xizmatlarini joriy etish va idoralararo elektron hamkorlik bo'limi",
-            column: 5,
-          },
-          {
-            id: 'Raqamli iqtisodiyotni rivojlantirish boshqarmasi',
-            name: 'Raqamli iqtisodiyotni rivojlantirish boshqarmasi',
-            column: 4,
-          },
-          {
-            id: "Iqtisodiyot tarmoqlarini raqamlashtirish bo'limi",
-            name: "Iqtisodiyot tarmoqlarini raqamlashtirish bo'limi",
-            column: 5,
-          },
-          {
-            id: "Raqamli industriya va IT-eksportni rivojlantirish bo'limi",
-            name: "Raqamli industriya va IT-eksportni rivojlantirish bo'limi",
-            column: 5,
-          },
-          {
-            id: "Sun'iy intellekt texnologiyalarini joriy qilish va rivojlantirish bo'limi",
-            name: "Sun'iy intellekt texnologiyalarini joriy qilish va rivojlantirish bo'limi",
-            column: 4,
-          },
-          {
-            id: "Vazir o'rinbosari",
-            column: 6,
-          },
-          {
-            id: 'Telekommunikatsiya infratuzilmasini rivojlantirish boshqarmasi',
-            column: 6,
-          },
-          {
-            id: "Hududiy bo'linmalar faoliyatini muvofiqlashtirish bo'limi",
-            column: 6,
-          },
-        ],
+        data: modifiedData,
+        nodes: dataNodes,
         levels: [
           {
             level: 0,
@@ -264,25 +132,26 @@ const OrgChart = () => {
             borderWidth: 2,
             dataLabels: {
               style: {
+                // fontSize: '12px',
                 color: '#fff',
               },
             },
           },
           {
             level: 1,
-            color: '#375289',
+            color: '#fff',
             borderColor: '#375289',
             borderWidth: 2,
             dataLabels: {
               style: {
-                color: '#fff',
+                color: '#000',
               },
             },
           },
           {
             level: 2,
             color: '#fff',
-            borderColor: '#375289',
+            borderColor: '#aaa',
             borderWidth: 2,
             dataLabels: {
               style: {
@@ -300,19 +169,29 @@ const OrgChart = () => {
               },
             },
           },
+          {
+            level: 4,
+            color: '#fff',
+            borderColor: '#aaa',
+            dataLabels: {
+              style: {
+                color: '#666',
+              },
+            },
+          },
         ],
         colorByPoint: false,
         borderRadius: 0,
-        nodeWidth: 70,
+        nodeWidth: Object.keys(levels).length * width,
       },
     ],
   };
 
   return (
-    <div className="org-chart-wrapper">
-      <HighchartsReact highcharts={Highcharts} options={options} />
+    <div className="organization-chart">
+      <HighchartsReact containerProps={{ id: 'highcharts-container' }} highcharts={Highcharts} options={options} />
     </div>
   );
 };
 
-export default OrgChart;
+export default OrganizationChart;
