@@ -96,7 +96,7 @@ const OrganizationChart = ({ data }: Props) => {
       panKey: 'shift',
       // inverted: true,
       spacing: [20, 20, 20, 20],
-      // width: (Object.keys(levels).length + 1) * width * Object.keys(levels).length,
+      width: (Object.keys(levels).length + 1) * width * Object.keys(levels).length,
       height: `${maxCount * 120}px`,
     },
     xAxis: {
