@@ -118,6 +118,7 @@ const OrganizationChart = ({ data }: Props) => {
         point: {
           events: {
             click: function () {
+              // @ts-ignore
               call(this.options.id as string);
             },
           },
