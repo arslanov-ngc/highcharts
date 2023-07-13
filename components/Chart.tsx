@@ -83,17 +83,28 @@ const OrganizationChart = ({ data }: Props) => {
 
   const options: Options = {
     chart: {
-      zooming: {
-        type: 'xy',
-        pinchType: 'xy',
-        // mouseWheel: false,
-        // singleTouch: true,
-      },
+      // zooming: {
+      //   type: 'xy',
+      //   pinchType: 'xy',
+      //   // mouseWheel: false,
+      //   // singleTouch: true,
+      // },
       type: 'organization',
+      panning: {
+        enabled: true,
+      },
+      panKey: 'shift',
       // inverted: true,
       spacing: [20, 20, 20, 20],
       // width: (Object.keys(levels).length + 1) * width * Object.keys(levels).length,
       height: `${maxCount * 120}px`,
+    },
+    xAxis: {
+      panningEnabled: true,
+    },
+    yAxis: {
+      enabled: true,
+      panningEnabled: true,
     },
     title: {
       text: '',
