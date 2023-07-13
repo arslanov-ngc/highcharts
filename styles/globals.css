@@ -15,10 +15,11 @@
 
 #highcharts-container > div {
   transform: scale(0.5);
-}
-#highcharts-container div {
-  overflow: visible !important;
 } */
+#highcharts-container div,
+#highcharts-container {
+  overflow: visible !important;
+}
 
 .chart-container {
   overflow: hidden;
