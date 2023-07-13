@@ -88,13 +88,6 @@ const OrganizationChart = ({ data }: Props) => {
       spacing: [20, 20, 20, 20],
       width: (Object.keys(levels).length + 1) * width * Object.keys(levels).length,
       height: `${maxCount * 120}px`,
-      panning: {
-        enabled: true,
-        type: 'x',
-      },
-    },
-    xAxis: {
-      max: 6,
     },
     title: {
       text: '',
@@ -109,7 +102,7 @@ const OrganizationChart = ({ data }: Props) => {
     // },
     tooltip: {
       // enabled: false,
-      followTouchMove: true
+      followTouchMove: false,
     },
     exporting: {
       allowHTML: true,
