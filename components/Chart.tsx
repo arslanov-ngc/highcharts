@@ -192,7 +192,7 @@ const OrganizationChart = ({ data }: Props) => {
 
   return (
     <div className="chart-container">
-      <Draggable>
+      <Draggable scale={0.5}>
         <div className="organization-chart">
           <HighchartsReact containerProps={{ id: 'highcharts-container' }} highcharts={Highcharts} options={options} />
         </div>
